@@ -7,7 +7,7 @@ import React, {
   useState,
 } from "react";
 import { Platform, StyleSheet } from "react-native";
-import { Gesture, GestureDetector } from "react-native-gesture-handler";
+import { Gesture, GestureDetector, GestureHandlerRootView } from "react-native-gesture-handler";
 import Animated, {
   runOnJS,
   useAnimatedStyle,
@@ -431,28 +431,30 @@ function SwipeableItem<T>(
 
   return (
     <OverlayContext.Provider value={overlayParams}>
-      <Animated.View
-        animatedProps={animPropsLeft}
-        style={[styles.underlay, leftStyle]}
-      >
-        <UnderlayContext.Provider value={underlayLeftParams}>
-          {renderUnderlayLeft(underlayLeftParams)}
-        </UnderlayContext.Provider>
-      </Animated.View>
-      <Animated.View
-        animatedProps={animPropsRight}
-        style={[styles.underlay, rightStyle]}
-      >
-        <UnderlayContext.Provider value={underlayRightParams}>
-          {renderUnderlayRight(underlayRightParams)}
-        </UnderlayContext.Provider>
-      </Animated.View>
-      <GestureDetector gesture={gesture}>
-        <Animated.View style={[styles.flex, overlayStyle]}>
-          {children}
-          {renderOverlay(overlayParams)}
+      <GestureHandlerRootView>
+        <Animated.View
+            animatedProps={animPropsLeft}
+            style={[styles.underlay, leftStyle]}
+        >
+          <UnderlayContext.Provider value={underlayLeftParams}>
+            {renderUnderlayLeft(underlayLeftParams)}
+          </UnderlayContext.Provider>
         </Animated.View>
-      </GestureDetector>
+        <Animated.View
+            animatedProps={animPropsRight}
+            style={[styles.underlay, rightStyle]}
+        >
+          <UnderlayContext.Provider value={underlayRightParams}>
+            {renderUnderlayRight(underlayRightParams)}
+          </UnderlayContext.Provider>
+        </Animated.View>
+        <GestureDetector gesture={gesture}>
+          <Animated.View style={[styles.flex, overlayStyle]}>
+            {children}
+            {renderOverlay(overlayParams)}
+          </Animated.View>
+        </GestureDetector>
+      </GestureHandlerRootView>
     </OverlayContext.Provider>
   );
 }
